@@ -115,6 +115,8 @@ Common variables:
 
 ```env
 OPENAI_API_KEY=your_api_key_here
+OPENROUTER_API_KEY=your_openrouter_key_here
+LLM_PROVIDER=openai
 OPENAI_BASE_URL=
 PORT=3000
 RATE_LIMIT_WINDOW_MS=60000
@@ -131,7 +133,8 @@ MAX_HISTORY_MESSAGES=12
 Model configuration lives in `server/config/models.js`.
 
 - Standard OpenAI keys use model IDs like `gpt-4o-mini`.
-- OpenRouter keys usually start with `sk-or-` and use IDs like `openai/gpt-4o-mini`.
+- OpenRouter keys should be stored in `OPENROUTER_API_KEY`, usually start with `sk-or-`, and use IDs like `openai/gpt-4o-mini`.
+- Set `LLM_PROVIDER=openrouter` to force OpenRouter mode.
 - You can also force a custom provider by setting `OPENAI_BASE_URL`.
 
 ## 6. Running the Application
@@ -592,4 +595,3 @@ Good next development steps:
 8. Move storage from JSON files to SQLite or Postgres for multi-user deployments.
 9. Add per-user conversation ownership.
 10. Add production logging and observability.
-

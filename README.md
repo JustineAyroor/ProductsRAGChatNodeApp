@@ -57,12 +57,21 @@ Then set your API key:
 
 ```env
 OPENAI_API_KEY=your_api_key_here
+LLM_PROVIDER=openai
 ```
 
 For OpenRouter, use an OpenRouter key and optionally set:
 
 ```env
+OPENROUTER_API_KEY=your_openrouter_key_here
+LLM_PROVIDER=openrouter
 OPENAI_BASE_URL=https://openrouter.ai/api/v1
+```
+
+OpenRouter keys usually start with `sk-or-`. To test your OpenRouter setup:
+
+```bash
+npm run test:openrouter
 ```
 
 ### 3. Run the app
@@ -90,6 +99,7 @@ npm run dev:client   # Run only the React client
 npm run build        # Build the React client
 npm start            # Start the Express server
 npm run build:start  # Build client, then start production server
+npm run test:openrouter # Verify OpenRouter with a tiny live request
 ```
 
 ## Knowledge Base
@@ -255,4 +265,3 @@ npm run dev:server
 For deeper implementation details, see:
 
 [docs/DEVELOPER_GUIDE.md](docs/DEVELOPER_GUIDE.md)
-

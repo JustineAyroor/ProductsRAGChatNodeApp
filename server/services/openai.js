@@ -11,6 +11,7 @@ const DEFAULT_MAX_PROMPT_TOKENS = 8000;
 const DEFAULT_MAX_OUTPUT_TOKENS = 700;
 const DEFAULT_MAX_CONTEXT_CHARS = 8000;
 const DEFAULT_MAX_HISTORY_MESSAGES = 12;
+const OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1";
 
 function envInt(name, fallback) {
   const value = parseInt(process.env[name] || "", 10);
@@ -33,16 +34,32 @@ function trimText(text, maxChars) {
 }
 
 function getClient() {
-  if (!process.env.OPENAI_API_KEY) {
-    throw new Error("OPENAI_API_KEY is not configured");
+  const useOpenRouter = isOpenRouter();
+  const apiKey = useOpenRouter
+    ? process.env.OPENROUTER_API_KEY
+    : process.env.OPENAI_API_KEY;
+
+  if (!apiKey) {
+    throw new Error(
+      useOpenRouter
+        ? "OPENROUTER_API_KEY is not configured"
+        : "OPENAI_API_KEY is not configured"
+    );
   }
 
-  const options = { apiKey: process.env.OPENAI_API_KEY };
+  const options = { apiKey };
 
   if (process.env.OPENAI_BASE_URL) {
     options.baseURL = process.env.OPENAI_BASE_URL;
-  } else if (isOpenRouter()) {
-    options.baseURL = "https://openrouter.ai/api/v1";
+  } else if (useOpenRouter) {
+    options.baseURL = OPENROUTER_BASE_URL;
+  }
+
+  if (useOpenRouter) {
+    options.defaultHeaders = {
+      "HTTP-Referer": process.env.APP_URL || `http://localhost:${process.env.PORT || 3000}`,
+      "X-Title": process.env.APP_NAME || "Employee Chatbot",
+    };
   }
 
   return new OpenAI(options);
@@ -114,7 +131,7 @@ function friendlyOpenAIError(err) {
   }
 
   if (err?.status === 401 || message.includes("invalid api key")) {
-    return "The LLM API key is missing or invalid. Check OPENAI_API_KEY in .env.";
+    return "The LLM API key is missing or invalid. Check OPENROUTER_API_KEY for OpenRouter or OPENAI_API_KEY for OpenAI in .env.";
   }
 
   if (err?.status === 429 || message.includes("rate limit")) {

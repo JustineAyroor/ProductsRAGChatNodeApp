@@ -9,7 +9,8 @@
     "dev:client": "npm run dev --prefix client",
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
     "build": "npm run build --prefix client",
-    "build:start": "npm run build && NODE_ENV=production npm start"
+    "build:start": "npm run build && NODE_ENV=production npm start",
+    "test:openrouter": "node scripts/test-openrouter.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
