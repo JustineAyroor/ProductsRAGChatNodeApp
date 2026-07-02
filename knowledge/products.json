@@ -58,5 +58,96 @@
       "integrations": "GitHub, GitLab, Bitbucket"
     },
     "supportNotes": "Parallel builds up to 4 concurrent runners. Docker and Kubernetes deployment support. Free tier: 500 build minutes/month."
+  },
+  {
+    "name": "NotifyPulse",
+    "sku": "NTP-006",
+    "price": 19.99,
+    "category": "Notifications",
+    "specs": {
+      "monthlyMessages": 100000,
+      "channels": "Email, SMS, Slack, Microsoft Teams",
+      "templates": "Unlimited",
+      "webhooks": 25
+    },
+    "supportNotes": "Includes delivery analytics, retry rules, and suppression lists. SMS usage may require carrier registration. Best for customer success and operations alerts."
+  },
+  {
+    "name": "HelpDesk AI",
+    "sku": "HDA-007",
+    "price": 79.99,
+    "category": "Customer Support",
+    "specs": {
+      "includedSeats": 15,
+      "monthlyTickets": 10000,
+      "aiSuggestions": "Included",
+      "integrations": "Zendesk, Freshdesk, Salesforce Service Cloud"
+    },
+    "supportNotes": "Provides ticket triage, suggested replies, sentiment detection, and escalation routing. Requires knowledge base sync during onboarding. Enterprise customers can enable custom intent models."
+  },
+  {
+    "name": "PeopleOps Portal",
+    "sku": "POP-008",
+    "price": 39.99,
+    "category": "HR Operations",
+    "specs": {
+      "employeeProfiles": 500,
+      "workflowTemplates": 30,
+      "documentStorage": "250 GB",
+      "approvalChains": "Multi-step"
+    },
+    "supportNotes": "Supports PTO requests, onboarding checklists, employee document collection, and manager approvals. Integrates with Okta, Workday, and Google Workspace. Recommended for HR teams with recurring employee lifecycle workflows."
+  },
+  {
+    "name": "FinanceGuard",
+    "sku": "FGD-009",
+    "price": 129.99,
+    "category": "Finance Compliance",
+    "specs": {
+      "transactionMonitoring": "Real-time",
+      "monthlyTransactions": 250000,
+      "auditRetention": "7 years",
+      "complianceReports": "SOX, PCI, custom controls"
+    },
+    "supportNotes": "Flags unusual spend patterns, policy exceptions, duplicate invoices, and approval bypasses. Requires finance admin approval for production rollout. Includes quarterly compliance review."
+  },
+  {
+    "name": "LaunchPad CRM",
+    "sku": "LPC-010",
+    "price": 59.99,
+    "category": "Sales",
+    "specs": {
+      "contacts": 50000,
+      "pipelines": 10,
+      "emailSequences": 100,
+      "forecasting": "Included"
+    },
+    "supportNotes": "Includes lead scoring, pipeline management, email sequence automation, and revenue forecasting. Connects with Gmail, Outlook, HubSpot, and Salesforce. Migration assistance is available for Pro and Enterprise customers."
+  },
+  {
+    "name": "FieldTrack Mobile",
+    "sku": "FTM-011",
+    "price": 34.99,
+    "category": "Field Operations",
+    "specs": {
+      "mobileUsers": 50,
+      "offlineMode": true,
+      "gpsCheckIns": "Included",
+      "forms": 200
+    },
+    "supportNotes": "Designed for field teams that need offline forms, route notes, GPS check-ins, and photo uploads. Data sync resumes automatically when connectivity returns. Device management policies are recommended for rollout."
+  },
+  {
+    "name": "LearnLoop LMS",
+    "sku": "LLM-012",
+    "price": 24.99,
+    "category": "Learning Management",
+    "specs": {
+      "activeLearners": 1000,
+      "courses": "Unlimited",
+      "certificates": "Included",
+      "scormSupport": true
+    },
+    "supportNotes": "Supports course assignments, progress tracking, quizzes, completion certificates, and SCORM packages. Useful for employee training, compliance courses, and customer education programs."
   }
 ]
