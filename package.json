@@ -10,9 +10,15 @@
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
     "build": "npm run build --prefix client",
     "build:start": "npm run build && NODE_ENV=production npm start",
+    "chroma:start": "npx chroma run --path ./data/chroma --port 8000",
+    "knowledge:index": "node scripts/index-knowledge.js",
+    "knowledge:health": "node scripts/check-vector-knowledge.js",
+    "knowledge:test": "node scripts/test-vector-knowledge.js",
     "test:openrouter": "node scripts/test-openrouter.js"
   },
   "dependencies": {
+    "@chroma-core/default-embed": "^0.1.9",
+    "chromadb": "^3.5.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",

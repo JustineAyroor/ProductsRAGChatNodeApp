@@ -333,16 +333,66 @@ Returns paginated interaction logs.
 
 ## 10. Knowledge Retrieval
 
-Knowledge retrieval is implemented in `server/services/knowledge.js`.
+Knowledge retrieval is routed through `server/services/retrieval.js`.
 
-The app currently loads:
+For a detailed explanation of keyword retrieval, vector retrieval, embeddings, Chroma, and how context is passed to the LLM, see [Retrieval and Vector Database Deep Dive](RETRIEVAL_AND_VECTOR_DB.md).
+
+The app supports two retrieval modes:
+
+- `RETRIEVAL_MODE=vector`: use Chroma semantic retrieval first.
+- `RETRIEVAL_MODE=keyword`: use the legacy keyword matcher directly.
+
+When vector mode is enabled but Chroma is unavailable, empty, or errors, the adapter automatically falls back to `server/services/knowledge.js`.
+
+The app loads source knowledge from:
 
 - `knowledge/products.json`
 - `knowledge/product-guide.md`
 
+### Vector Retrieval
+
+Vector retrieval is implemented in `server/services/vectorKnowledge.js`.
+
+It uses:
+
+- Chroma collection: `CHROMA_COLLECTION`, default `employee_knowledge`
+- Chroma URL: `CHROMA_URL`, default `http://localhost:8000`
+- Top result count: `VECTOR_TOP_K`, default `5`
+- Chroma default local embeddings
+
+Start local persistent Chroma:
+
+```bash
+npm run chroma:start
+```
+
+Check Chroma connectivity and collection count:
+
+```bash
+npm run knowledge:health
+```
+
+Index local knowledge:
+
+```bash
+npm run knowledge:index
+```
+
+Test vector search:
+
+```bash
+npm run knowledge:test
+```
+
+The indexer rebuilds the configured collection from local knowledge files and uses deterministic IDs such as `product:CSP-001` and `guide:return-and-refund-policy`.
+
+### Legacy Keyword Retrieval
+
+Legacy keyword retrieval remains in `server/services/knowledge.js` and is not removed.
+
 ### Product Knowledge
 
-Each product in `products.json` becomes a searchable chunk with:
+Each product in `products.json` becomes a searchable document/chunk with:
 
 - Product name
 - SKU
@@ -350,18 +400,11 @@ Each product in `products.json` becomes a searchable chunk with:
 - Category
 - Specs
 - Support notes
-- Search aliases
-
-The retrieval logic handles product-name variants such as:
-
-- `CloudSync` and `cloud sync`
-- `SecureVault` and `secure vault`
-- SKUs such as `TFB-003`
-- Broad requests such as `list products`
+- Search metadata
 
 ### Guide Knowledge
 
-`product-guide.md` is split by Markdown headings. Each heading section becomes its own retrieval chunk.
+`product-guide.md` is split by Markdown headings. Each heading section becomes its own retrieval document/chunk.
 
 ### Important Behavior
 
@@ -371,8 +414,9 @@ If product questions are returning poor answers, check:
 
 1. Does the product exist in `knowledge/products.json`?
 2. Are the product name, category, specs, and notes descriptive enough?
-3. Was the backend restarted after editing knowledge files?
-4. Is `MAX_CONTEXT_CHARS` large enough for the retrieved context?
+3. If vector mode is enabled, was `npm run knowledge:index` rerun after editing knowledge files?
+4. Is Chroma running at `CHROMA_URL`?
+5. Is `MAX_CONTEXT_CHARS` large enough for the retrieved context?
 
 ## 11. Prompt and Token Management
 

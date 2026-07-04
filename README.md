@@ -7,6 +7,7 @@ An internal employee chatbot built with React, Express, and an OpenAI-compatible
 - React/Vite chat interface
 - Streaming assistant responses with Server-Sent Events
 - Local knowledge retrieval from product and policy files
+- Optional Chroma vector retrieval with keyword fallback
 - OpenAI and OpenRouter-compatible model support
 - Conversation history stored in local JSON files
 - Token usage and estimated cost logging
@@ -14,6 +15,7 @@ An internal employee chatbot built with React, Express, and an OpenAI-compatible
 - Rate limiting for chat and conversation creation
 - Lightweight formatted assistant answers in the UI
 - Developer documentation in [docs/DEVELOPER_GUIDE.md](docs/DEVELOPER_GUIDE.md)
+- Retrieval deep dive in [docs/RETRIEVAL_AND_VECTOR_DB.md](docs/RETRIEVAL_AND_VECTOR_DB.md)
 
 ## Tech Stack
 
@@ -21,7 +23,7 @@ An internal employee chatbot built with React, Express, and an OpenAI-compatible
 - Server: Node.js, Express
 - LLM SDK: OpenAI JavaScript SDK
 - Storage: local JSON files
-- Knowledge base: JSON and Markdown files
+- Knowledge base: JSON and Markdown files, optionally indexed into Chroma
 
 ## Project Structure
 
@@ -99,6 +101,10 @@ npm run dev:client   # Run only the React client
 npm run build        # Build the React client
 npm start            # Start the Express server
 npm run build:start  # Build client, then start production server
+npm run chroma:start # Start local persistent Chroma at ./data/chroma
+npm run knowledge:health # Check Chroma connectivity and indexed document count
+npm run knowledge:index # Index local knowledge into Chroma
+npm run knowledge:test # Test vector retrieval against Chroma
 npm run test:openrouter # Verify OpenRouter with a tiny live request
 ```
 
@@ -130,6 +136,47 @@ knowledge/product-guide.md
 - Troubleshooting procedures
 
 After editing knowledge files, restart the backend server so the updated knowledge is loaded.
+
+### Vector Retrieval with Chroma
+
+The app can use Chroma for semantic retrieval instead of the legacy keyword matcher.
+
+Configure retrieval in `.env`:
+
+```env
+RETRIEVAL_MODE=vector
+CHROMA_URL=http://localhost:8000
+CHROMA_COLLECTION=employee_knowledge
+VECTOR_TOP_K=5
+```
+
+Start Chroma in one terminal:
+
+```bash
+npm run chroma:start
+```
+
+Check that the backend can reach Chroma:
+
+```bash
+npm run knowledge:health
+```
+
+If the collection is missing or empty, index the local knowledge base in another terminal:
+
+```bash
+npm run knowledge:index
+```
+
+Test semantic retrieval:
+
+```bash
+npm run knowledge:test
+```
+
+If Chroma is offline or empty, the backend automatically falls back to the existing keyword retriever in `server/services/knowledge.js`.
+
+For a detailed explanation of embeddings, vector search, fallback behavior, and keyword vs. vector tradeoffs, see [docs/RETRIEVAL_AND_VECTOR_DB.md](docs/RETRIEVAL_AND_VECTOR_DB.md).
 
 ## Current Product Catalog
 

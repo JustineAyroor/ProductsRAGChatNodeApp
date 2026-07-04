@@ -1,5 +1,5 @@
 const OpenAI = require("openai");
-const { retrieveContext } = require("./knowledge");
+const { retrieveContext } = require("./retrieval");
 const { isOpenRouter } = require("../config/models");
 
 const SYSTEM_PROMPT_BASE =
@@ -65,7 +65,7 @@ function getClient() {
   return new OpenAI(options);
 }
 
-function buildMessages(history, userMessage) {
+async function buildMessages(history, userMessage) {
   const maxPromptTokens = envInt("MAX_PROMPT_TOKENS", DEFAULT_MAX_PROMPT_TOKENS);
   const maxContextChars = envInt("MAX_CONTEXT_CHARS", DEFAULT_MAX_CONTEXT_CHARS);
   const maxHistoryMessages = envInt(
@@ -73,7 +73,7 @@ function buildMessages(history, userMessage) {
     DEFAULT_MAX_HISTORY_MESSAGES
   );
 
-  const context = trimText(retrieveContext(userMessage), maxContextChars);
+  const context = trimText(await retrieveContext(userMessage), maxContextChars);
   const systemPrompt = `${SYSTEM_PROMPT_BASE}\n\n--- CONTEXT ---\n${context}`;
 
   const messages = [{ role: "system", content: systemPrompt }];
@@ -143,7 +143,7 @@ function friendlyOpenAIError(err) {
 
 async function streamChat({ history, userMessage, model, onChunk }) {
   const client = getClient();
-  const messages = buildMessages(history, userMessage);
+  const messages = await buildMessages(history, userMessage);
   const maxOutputTokens = envInt("MAX_OUTPUT_TOKENS", DEFAULT_MAX_OUTPUT_TOKENS);
 
   let stream;
